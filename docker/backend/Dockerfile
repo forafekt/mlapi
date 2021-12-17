@@ -23,12 +23,14 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN . $VIRTUAL_ENV/bin/activate
 RUN chmod 777 -R $VIRTUAL_ENV
 
-COPY requirements.txt .
-
 RUN python3 --version
 RUN python3 -m pip install -U --force-reinstall pip
 RUN python3 -m pip install --upgrade wheel
-RUN pip install -r requirements.txt
+
+Add ./requirements /requirements
+RUN python3 -m pip install --no-cache-dir -r /requirements/local.txt \
+    && rm -rf /requirements \
+
 RUN pip install gunicorn
 RUN pip install tzdata
 

@@ -13,6 +13,14 @@ do
     sleep 2
 done
 
+echo "Create superuser"
+until ../manage.py shell -c "from django.contrib.auth.models import User; User.objects.create_superuser('testpilot', 'forafekt@gmail.com', 'Admin123')"
+
+do
+    echo "Waiting for superuser..."
+    sleep 2
+done
+
 echo "Running manage.py collectstatic"
 ../manage.py collectstatic --noinput
 
@@ -23,4 +31,5 @@ do
 done
 echo "Starting backend django server"
 echo "Running manage.py gunicorn on port 8000"
-gunicorn server.wsgi --bind :8000 --workers 4 --threads 4
+gunicorn server.wsgi --bind :8000 --workers 4 --threads 4 --reload
+
